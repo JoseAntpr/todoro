@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Todoro</title>
+</head>
+<body>
+    <ul>
+        {% for task in task_objects %}
+            <li>{{ task.name }}</li>
+        {% endfor %}
+    </ul>
+
+
+</body>
+</html>

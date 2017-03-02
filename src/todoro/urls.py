@@ -16,9 +16,9 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from tasks.views import helloworld
+from tasks.views import tasks_list
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^hello', helloworld)
+    url(r'^$', tasks_list)
 ]
