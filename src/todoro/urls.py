@@ -16,9 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from tasks.views import tasks_list
+from tasks.views import tasks_list, task_detail
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', tasks_list)
+    url(r'^$', tasks_list, name="tasks_list"),
+    url(r'^tasks/(?P<task_pk>[0-9]+)$', task_detail, name="task_detail")
 ]
