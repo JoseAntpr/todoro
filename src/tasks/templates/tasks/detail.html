@@ -26,12 +26,20 @@
         </li>
         <li>
             <strong>Status: </strong>
-            {{ task.status }}
+            {% if task.time_estimated %}
+                {{ task.get_status_display }}
+            {%else%}
+                No time set
+            {%endif}
 
         </li>
         <li>
             <strong>Deadline: </strong>
-            {{ task.deadline }}
+            {% if task.deadline %}
+                {{ task.deadline }}
+            {% else %}
+                No deadline set.
+            {%endif %}
         </li>
     </ul>
 
