@@ -13,6 +13,12 @@ def tasks_list(request):
     # Recuperamos todas las tareas
     tasks =  Task.objects.select_related("owner","assignee").all()
 
+    if request.GET.get('filter') == 'owned':
+        tasks = tasks.filter(owner=request.user)
+
+    if request.GET.get('filter') == 'assigned' :
+        tasks = tasks.filter(assignee=request.user)
+
     #Devolver respuesta
 
     context = {
@@ -31,9 +37,9 @@ def task_detail(request, task_pk):
 
     #Recuperar la tarea
     try:
-        task = Task.objects.get(pk=task_pk)
+        task = Task.objects.select_related().get(pk=task_pk)
     except Task.DoesNotExist:
-        return HttpResponseNotFound("La tarea que buscas no existe.")
+        return render(request, 'tasks/404.html',{}, status=404)
     except Task.MultipleObjectsReturned:
         return HttpResponse("Existen varias tareas con ese identificador",status=300)
 

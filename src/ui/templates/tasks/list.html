@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Todoro</title>
-</head>
-<body>
-    <h1>Todoro</h1>
+{% extends 'base.html' %}
+{% block content %}
     <table width="100%" border="1px" cellpadding="10" cellspacing="0">
         <thead>
             <tr>
@@ -37,7 +31,4 @@
             {% endfor %}
         </tbody>
     </table>
-
-
-</body>
-</html>
+{% endblock %}
