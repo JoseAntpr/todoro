@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', tasks_list, name="tasks_list"),
     url(r'^tasks/(?P<task_pk>[0-9]+)$', task_detail, name="task_detail"),
-    url(r'^login',login,name="login")
+    url(r'^login$',login,name="login")
 ]
