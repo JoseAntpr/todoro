@@ -1,8 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from tasks.models import Task
 
-# Create your views here.
+@login_required()
 def tasks_list(request):
     """
     Recupera todas las tareas de la base de datos y las
@@ -27,6 +28,7 @@ def tasks_list(request):
 
     return render(request, "tasks/list.html",context)
 
+@login_required()
 def task_detail(request, task_pk):
     """
     Recupera una tarea de la base de datos y la pinta con una plantilla
@@ -54,3 +56,13 @@ def task_detail(request, task_pk):
 
     #Renderizar la plantilla
     return render(request, 'tasks/detail.html',context)
+
+
+def login(request):
+    """
+
+    :param request: HttoRequest
+    :return: HttpResponse
+    """
+
+    return render(request,'login.html')
