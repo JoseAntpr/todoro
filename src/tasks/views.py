@@ -56,13 +56,3 @@ def task_detail(request, task_pk):
 
     #Renderizar la plantilla
     return render(request, 'tasks/detail.html',context)
-
-
-def login(request):
-    """
-
-    :param request: HttoRequest
-    :return: HttpResponse
-    """
-
-    return render(request,'login.html')

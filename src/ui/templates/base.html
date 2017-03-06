@@ -12,7 +12,9 @@
     {% if user.is_authenticated %}
         <a href="{% url 'tasks_list' %}?filter=owned" title="Home">Created by me</a>
         |
-         <a href="{% url 'tasks_list' %}?filter=assigned" title="Home">Assigned to me</a>
+        <a href="{% url 'tasks_list' %}?filter=assigned" title="Home">Assigned to me</a>
+        |
+        <a href="{% url 'logout' %}" title="Logout">Logout</a>
     {% else %}
         <a href="{% url 'login' %}" title="Login">Login</a>
     {% endif %}
