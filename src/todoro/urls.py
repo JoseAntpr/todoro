@@ -16,13 +16,20 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from tasks.views import tasks_list, task_detail
-from users.views import login, logout
+from tasks.views import tasks_list, task_detail, NewTaskView
+from users.api import UsersApi, UserDetailApi
+from users.views import LoginView, logout
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', tasks_list, name="tasks_list"),
     url(r'^tasks/(?P<task_pk>[0-9]+)$', task_detail, name="task_detail"),
-    url(r'^login$', login, name="login"),
-    url(r'logout', logout, name="logout")
+    url(r'^tasks/new$', NewTaskView.as_view(), name="tasks_new"),
+    url(r'^login$', LoginView.as_view(), name="login"),
+    url(r'logout', logout, name="logout"),
+
+    #Url
+    url(r'api/1.0/users/$', UsersApi.as_view(), name="users_api"),
+    url(r'api/1.0/users/(?P<pk>[0-9]+)/?$', UserDetailApi.as_view(), name="user_detail_api")
+
 ]

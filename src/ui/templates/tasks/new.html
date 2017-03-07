@@ -1,0 +1,18 @@
+
+{% extends 'base.html' %}
+
+{% block title %} New task {% endblock %}
+
+{% block content %}
+<h2>New task</h2>
+{% autoescape off %}
+    <div>{{ message }}</div>
+{% endautoescape %}
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div>
+        <button>Submit</button>
+    </div>
+</form>
+{% endblock %}

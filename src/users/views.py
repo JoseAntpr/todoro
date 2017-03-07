@@ -1,35 +1,51 @@
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.shortcuts import render, redirect
+from django.views import View
+
+from src.users.forms import LoginForm
 
 
-def login(request):
-    """
+class LoginView(View):
 
-    :param request: HttoRequest
-    :return: HttpResponse
-    """
+    def get(self,request):
+        """
 
-    context = dict()
+        :param request: HttoRequest
+        :return: HttpResponse
+        """
+        context = {
+            'form': LoginForm()
+        }
+        return render(request, 'login.html', context)
 
-    if request.method == "POST":
-        username = request.POST.get("usr")
-        password = request.POST.get("pwd")
+    def post(self, request):
+        """
 
-        user = authenticate(username=username, password=password)
+        :param request: HttoRequest
+        :return: HttpResponse
+        """
 
-        if user is not None:
-            #usuarios autenticadoq
-            request.session["default-language"] = "es"
-            django_login(request, user)
-            url = request.GET.get('next', 'tasks_list')
-            return redirect(url)
-        else:
-            #usuario no autenticado
-            context["error"] = "Wrong username or password"
+        form = LoginForm(request.POST)
+        context = dict()
 
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
+            user = authenticate(username=username, password=password)
 
+            if user is not None:
+                # usuarios autenticadoq
+                request.session["default-language"] = "es"
+                django_login(request, user)
+                url = request.GET.get('next', 'tasks_list')
+                return redirect(url)
+            else:
+                # usuario no autenticado
+                context["error"] = "Wrong username or password"
 
-    return render(request, 'login.html', context)
+        context['form'] = form
+
+        return render(request, 'login.html', context)
 
 def logout(request):
     """

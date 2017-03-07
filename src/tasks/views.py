@@ -1,7 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
-from tasks.models import Task
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.urls import reverse
+
+from tasks.forms import TaskForm
+from .models import Task
 
 @login_required()
 def tasks_list(request):
@@ -56,3 +61,44 @@ def task_detail(request, task_pk):
 
     #Renderizar la plantilla
     return render(request, 'tasks/detail.html',context)
+class NewTaskView(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        # crear el formulario
+        form = TaskForm()
+
+        # renderiza la plantilla con el formulario
+        context = {
+            "form": form
+        }
+        return render(request, 'tasks/new.html', context)
+
+    @method_decorator(login_required)
+    def post(self, request):
+        # crear el formulario con los datos del POST
+        task_with_user = Task(owner=request.user)
+        form = TaskForm(request.POST, instance=task_with_user)
+
+        # validar el formulario
+        if form.is_valid():
+            # crear la tarea
+            task = form.save()
+
+            # mostrar mensaje de exito
+            message = 'Tarea creada con éxito! <a href="{0}">Ver tarea</a>'.format(
+                reverse('tasks_detail', args=[task.pk])  # genera la URL de detalle de esta tarea
+            )
+
+            # limpiamos el formulario creando uno vacío para pasar a la plantilla
+            form = TaskForm()
+        else:
+            # mostrar mensaje de error
+            message = "Se ha producido un error"
+
+        # renderizar la plantilla
+        context = {
+            "form": form,
+            "message": message
+        }
+        return render(request, 'tasks/new.html', context)
