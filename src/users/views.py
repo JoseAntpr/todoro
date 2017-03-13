@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login as django_login, logout as d
 from django.shortcuts import render, redirect
 from django.views import View
 
-from src.users.forms import LoginForm
+from users.forms import LoginForm
 
 
 class LoginView(View):

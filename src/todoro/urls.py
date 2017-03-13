@@ -19,6 +19,7 @@ from django.contrib import admin
 from tasks.views import tasks_list, task_detail, NewTaskView
 from users.api import UsersApi, UserDetailApi
 from users.views import LoginView, logout
+from tasks.api import TasksApi
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -30,6 +31,9 @@ urlpatterns = [
 
     #Url
     url(r'api/1.0/users/$', UsersApi.as_view(), name="users_api"),
-    url(r'api/1.0/users/(?P<pk>[0-9]+)/?$', UserDetailApi.as_view(), name="user_detail_api")
+    url(r'api/1.0/users/(?P<pk>[0-9]+)/?$', UserDetailApi.as_view(), name="user_detail_api"),
+
+    #Api de tasks
+    url(r'^api/1.0/tasks/$', TasksApi.as_view(), name="tasks_api")
 
 ]
