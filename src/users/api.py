@@ -1,16 +1,20 @@
 
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from users.serializers import UserSerializer, UserListSerializer
+from users.permissions import UserPermission
 
 
 
 
-class UsersApi(APIView):
+class UsersApi(GenericAPIView):
+
+    permission_classes = (UserPermission, )
 
     def get(self, request):
         """
@@ -20,9 +24,9 @@ class UsersApi(APIView):
         """
 
         users = User.objects.all().values("id","username")
-        serializer = UserListSerializer(users, many=True)
-
-        return Response(serializer.data)
+        page = self.paginate_queryset(users)
+        serializer = UserListSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     def post(self, request):
         """
@@ -44,6 +48,8 @@ class UserDetailApi(APIView):
     User detail (GET), updated user(PUT), delete(DELETE)
     """
 
+    permission_classes = (UserPermission,)
+
     def get(self, request, pk):
         """
         Return a requested user
@@ -52,6 +58,7 @@ class UserDetailApi(APIView):
         :return: Response
         """
         user = get_object_or_404(User, pk=pk)
+        self.check_object_permissions(request, user)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
@@ -63,6 +70,7 @@ class UserDetailApi(APIView):
         :return: Response
         """
         user = get_object_or_404(User, pk=pk)
+        self.check_object_permissions(request, user)
         serializer = UserSerializer(user, data=request.data)
 
         if serializer.is_valid():
@@ -80,6 +88,7 @@ class UserDetailApi(APIView):
         """
 
         user = get_object_or_404(User, pk=pk)
+        self.check_object_permissions(request, user)
         serializer = UserSerializer(user)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
