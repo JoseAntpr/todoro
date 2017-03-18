@@ -15,11 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from rest_framework.routers import DefaultRouter
 
 from tasks.views import tasks_list, task_detail, NewTaskView
-from users.api import UsersApi, UserDetailApi
 from users.views import LoginView, logout
-from tasks.api import TasksApi, TaskDetailApi
+from tasks.api import TaskViewSet
+
+from users.api import UserViewSet
+
+router = DefaultRouter()
+router.register("users", UserViewSet, base_name="users_api")
+router.register("tasks", TaskViewSet)
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -29,12 +35,8 @@ urlpatterns = [
     url(r'^login$', LoginView.as_view(), name="login"),
     url(r'logout', logout, name="logout"),
 
-    #Url
-    url(r'^api/1.0/users/$', UsersApi.as_view(), name="users_api"),
-    url(r'^api/1.0/users/(?P<pk>[0-9]+)/?$', UserDetailApi.as_view(), name="user_detail_api"),
+    #Api de Users and Tasks
+    url(r'^api/1.0/', include(router.urls)),
 
-    #Api de tasks
-    url(r'^api/1.0/tasks/$', TasksApi.as_view(), name="tasks_api"),
-    url(r'^api/1.0/tasks/(?P<pk>[0-9]+)/?$', TaskDetailApi.as_view(), name="tasks_detail_api")
 
 ]

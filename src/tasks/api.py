@@ -2,6 +2,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from tasks.models import Task
 from tasks.serializer import TasksSerializer, TasksListSerializer
@@ -9,7 +10,7 @@ from tasks.serializer import TasksSerializer, TasksListSerializer
 
 
 
-class TasksApi(ListCreateAPIView):
+class TaskViewSet(ModelViewSet):
     """
     Lists (GET) and Creates (POST) Tasks
     """
@@ -17,16 +18,7 @@ class TasksApi(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
-        return TasksListSerializer if self.request.method == "GET" else TasksSerializer
+        return TasksListSerializer if self.action == "list" else TasksSerializer
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-class TaskDetailApi(RetrieveUpdateDestroyAPIView):
-    """
-    Retrives(GET), Updates (PUT) and Destroy (DELETE) a given Task
-    """
-
-    queryset = Task.objects.all()
-    serializer_class = TasksSerializer
-    permission_classes = (IsAuthenticated,)

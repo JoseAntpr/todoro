@@ -5,18 +5,17 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.viewsets import  GenericViewSet
 
 from users.serializers import UserSerializer, UserListSerializer
 from users.permissions import UserPermission
 
 
-
-
-class UsersApi(GenericAPIView):
+class UserViewSet(GenericViewSet):
 
     permission_classes = (UserPermission, )
 
-    def get(self, request):
+    def list(self, request):
         """
         Return a list of the system users
         :param request: HttpRequest
@@ -28,7 +27,7 @@ class UsersApi(GenericAPIView):
         serializer = UserListSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-    def post(self, request):
+    def create(self, request):
         """
         create a user
         :param request: HttpRequest
@@ -43,14 +42,7 @@ class UsersApi(GenericAPIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UserDetailApi(APIView):
-    """
-    User detail (GET), updated user(PUT), delete(DELETE)
-    """
-
-    permission_classes = (UserPermission,)
-
-    def get(self, request, pk):
+    def retrieve(self, request, pk):
         """
         Return a requested user
         :param request: HttpRequest
@@ -62,7 +54,7 @@ class UserDetailApi(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
-    def put(self, request, pk):
+    def update(self, request, pk):
         """
         Updaates a user with the given daa
         :param request: HttpRequest
@@ -79,7 +71,7 @@ class UserDetailApi(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def destroy(self, request, pk):
         """
         Deletes a user
         :param request: HttpRequest

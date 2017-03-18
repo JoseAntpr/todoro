@@ -11,15 +11,18 @@ class UserPermission(BasePermission):
         :param view:
         :return:
         """
-        from users.api import UserDetailApi
+        #Cualquiera autenticado puede acceder al detalle para ver, actualizar o borrar
+        if request.user.is_authenticated() and view.action in ("retrieve", "update", "destroy"):
+            return True
 
+        #Si es superusuario y quiere acceder al listado
+        if request.user.is_superuser and view.action == "list":
+            return True
         #Cualquiera puede crear un usuario (POST)
-        if request.method == "POST":
+        if view.action == "create":
             return True
 
-        # En cualquier otro caso (GET, PUT, DELETE), el usuario debe estar autenticado
-        if request.user.is_authenticated() and (request.user.is_superuser or isinstance(view, UserDetailApi)):
-            return True
+
         #Un uusario no authenticado no puede ejecutar get, put o delete
 
         return False
